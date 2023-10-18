@@ -28,49 +28,53 @@ def check_entry(event):
 
     elapsed_time = (dt.datetime.now() - start_time).total_seconds()
     words_per_minute = int(correct_user_words / (elapsed_time/60))
-    print(f"Elapsed time: {elapsed_time:.2f} seconds, WPM: {words_per_minute} You typed: {correct_user_words} correct words")
+    result.config(text=f"Elapsed time: {elapsed_time:.2f} seconds, WPM: {words_per_minute} You typed: {correct_user_words} correct words")
 
     typing_place.delete(0, END)
     start_time = None
-    if not first_enter_pressed:  # Check if it's the first Enter key press
-        try_again_button.config(state=NORMAL)  # Enable "Try again" button
+    if not first_enter_pressed:
+        try_again_button.config(state=NORMAL)
         first_enter_pressed = True
 
 def try_again():
     # Clear the text entry field and disable the "Try again" button
     typing_place.delete(0, END)
+    result.config(text='')
     try_again_button.config(state=NORMAL)
 
 
 
 window = Tk()
 window.title("Test Your Typing Speed")
-window.minsize(width=700, height=400)
+window.minsize(width=800, height=400)
 window.config(padx=30, pady=30)
 
-word_label = Label(text="Type the words you see as fast as you can!\nPress Enter when you're done!", font=("Arial", 16, "bold"))
+word_label = Label(text="Type the words you see as fast as you can!\nPress Enter when you're done.", font=("Arial", 16, "bold"))
 word_label.grid(column=0, row=0, columnspan=3)
+word_label.config(padx=20, pady=20)
 
 
 
-text_model = Text(height=5, width=50)
-text_model.grid(column=0, row=1, columnspan=3, sticky="nsew")
-text_model.config(padx=20, pady=20, font=("Arial", 14))
+text_model = Text(height=5, width=70)
+text_model.grid(column=0, row=1, columnspan=3)
+text_model.config(padx=20, pady=20, font=("Arial", 18))
 text_model.insert("1.0", words)
 
 typing_place = Entry()
 typing_place.focus()
 typing_place.grid(column=0, row=2, columnspan=3)
-
 typing_place.bind("<KeyPress>", start_typing)
 typing_place.bind("<Return>", check_entry)
 
 
 #create try again button
 try_again_button = Button(text="Try again", command=try_again)
-try_again_button.grid(column=0, row=3, columnspan=3)
+try_again_button.grid(column=0, row=4, columnspan=3)
 try_again_button.config(state=DISABLED)
 
+
+result = Label(text=None)
+result.grid(column=0, row=3, columnspan=3)
 
 
 window.grid_rowconfigure(1)
